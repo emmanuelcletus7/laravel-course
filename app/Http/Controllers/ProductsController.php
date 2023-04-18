@@ -43,32 +43,52 @@ class ProductsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(products $products)
+    public function show($id)
     {
-        //
+       $Layout = Products::findOrFail($id);
+       return view('Layout.show', ['Layout' =>$Layout]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(products $products)
+    public function edit($id)
     {
-        //
+        $Layout = Products::findOrFail($id);
+       return view('Layout.edit', ['Layout' =>$Layout]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, products $products)
+    public function update(Request $request, $id)
     {
-        //
+       
+        $request->validate([
+            'name'=>'required',
+            'desc'=>'required',
+            'price'=>'required',
+        ]);
+
+        $Layout = Products::findOrFail($id);
+        // $Layout = Products::create($request->all());
+        $Layout->name = $request->name;
+        $Layout->desc = $request->desc;
+        $Layout->price = $request->price;
+        $Layout->save();
+      return redirect()->route('Layout.index')->with
+      ('message', 'Product Updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(products $products)
+    public function destroy( $id)
     {
-        //
+       $Layout = Products::findOrFail($id);
+       $Layout->delete();
+
+       return redirect()->route('Layout.index')->with
+      ('message', 'Product Deleted successfully');
     }
 }
